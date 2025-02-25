@@ -32,13 +32,17 @@ RUN apt-get update && apt-get install -y \
 	wget \
 	help2man
 
+RUN apt-get update && apt-get install libusb-1.0-0-dev -y
+
 RUN useradd -m -s /bin/bash -g dialout esp && passwd -d esp
 
 USER esp
 
 WORKDIR /home/esp
 
-RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+RUN mkdir shared_project
+
+RUN git clone --recursive https://github.com/harisant/esp-open-sdk.git
 
 RUN cd esp-open-sdk && make STANDALONE=n
 
@@ -57,13 +61,14 @@ RUN cd esp-open-sdk \
 	#&& make VENDOR_SDK=1.1.2 \
 	#&& make VENDOR_SDK=1.2.0 \
 	#&& make VENDOR_SDK=1.3.0 \
-	&& make VENDOR_SDK=1.4.0 \
-	&& make VENDOR_SDK=1.5.0 \
-	&& make VENDOR_SDK=1.5.1 \
-	&& make VENDOR_SDK=1.5.2 \
+	# && make VENDOR_SDK=1.4.0 \
+	# && make VENDOR_SDK=1.5.0 \
+	# && make VENDOR_SDK=1.5.1 \
+	# && make VENDOR_SDK=1.5.2 \
 	&& make VENDOR_SDK=1.5.3 \
-	&& make VENDOR_SDK=2.0.0 \
-	&& make VENDOR_SDK=1.5.4
+	&& make VENDOR_SDK=1.5.4 \
+	&& make VENDOR_SDK=2.0.0
+	
 
 ENV PATH /home/esp/esp-open-sdk/xtensa-lx106-elf/bin:/home/esp/esp-open-sdk/esptool:$PATH
 ENV XTENSA_TOOLS_ROOT /home/esp/esp-open-sdk/xtensa-lx106-elf/bin
